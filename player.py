@@ -1,8 +1,12 @@
 import random
+from collections import deque
 
 
 # -- player class to create both human and bot players --
 class Player:
+
+    game_players = deque()
+
     def __init__(self, player_name: str) -> None:
         self.turns = 1
         self.name = player_name
@@ -21,6 +25,8 @@ class Player:
         self.memory = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
         # here is how opponent bots see temper of the player
         self.temper_for_other_players = 0
+
+        Player.game_players.append(self)
 
     def restore_dice(self) -> None:
         self.dice = 5

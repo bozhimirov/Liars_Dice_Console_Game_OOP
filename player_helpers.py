@@ -5,18 +5,15 @@ from pause import pause
 from player import Player
 from print import Print
 from stats_memory_players import get_player_by_name
-from text_instructions import text_left_game, \
-    text_result_and_who_lose_die, text_someone_call_other_liar
 
 
 # -- adding player object --
 def add_player(player: str, list_names_of_bots: list, game_players: deque, language: bool) -> deque:
     if player not in list_names_of_bots:
-        player_object = Player(player)
-        game_players.append(player_object)
-        return game_players
+        Player(player)
+        return Player.game_players
     else:
-        Print.text_choose_name_again()
+        Print.text_choose_name_again(language)
         human = add_player(input(), list_names_of_bots, game_players, language)
         return human
 
@@ -31,11 +28,11 @@ def create_list_of_players(number_of_bots: str, list_names_of_bots: list, game_p
                 add_player(c, list_names_of_bots, game_players, language)
             return int(number_of_bots)
         else:
-            Print.text_incorrect_input_opponents()
+            Print.text_incorrect_input_opponents(language)
             create_list_of_players(input(), list_names_of_bots, game_players, language)
     else:
 
-        Print.text_incorrect_input_opponents()
+        Print.text_incorrect_input_opponents(language)
         create_list_of_players(input(), list_names_of_bots, game_players, language)
 
 
@@ -67,7 +64,7 @@ def players_active(players: deque, game_players_names: list, language: bool) -> 
             else:
                 players_names.append(player.name)
     if inactive_names:
-        text_left_game(language, inactive_names)
+        Print.text_left_game(language, inactive_names)
         return players_names
     else:
         return players_names
@@ -87,13 +84,13 @@ def check_who_lose_die(c_bidder: Player, l_bidder: Player, players_turns: dict, 
                 if v[i] == searched_number:
                     number_of_dices_of_searched_number += 1
     if number_of_dices_of_searched_number < int(last_bet[0]):
-        text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, l_bidder)
+        Print.text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, l_bidder)
         remove_dice(g_players, l_bidder)
         g_players_names = players_active(g_players, g_players_names, language)
         choosing_player_to_start(l_bidder, g_players, g_players_names)
     else:
 
-        text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, c_bidder)
+        Print.text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, c_bidder)
         remove_dice(g_players, c_bidder)
         g_players_names = players_active(g_players, g_players_names, language)
         choosing_player_to_start(c_bidder, g_players, g_players_names)
@@ -141,11 +138,11 @@ def check_if_players_are_bluffing(players: deque, wild: bool) -> None:
 
 #  -- when someone is challenged show dice in players hand --
 def print_if_liar(current_player: str, last_player: str, player_turn: dict, language: bool) -> None:
-    text_someone_call_other_liar(language, current_player, last_player)
+    Print.text_someone_call_other_liar(language, current_player, last_player)
     showing_string = ''
     for pln, d in player_turn.items():
         showing_string += pln
-        word = Print.get_verb()
+        word = Print.get_verb(language)
         showing_string += str(word)
         showing_string += ', '.join(map(str, d))
         showing_string += ' ; '

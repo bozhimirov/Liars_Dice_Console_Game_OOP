@@ -2,10 +2,10 @@ import random
 from collections import deque
 
 from player import Player
+from print import Print
 from player_helpers import get_player_by_name, add_turns_to_player
 from probability_calculation import calculate_probability
 from stats_memory_players import load_memory
-from text_instructions import text_player_bet
 from validators import valid_bet
 
 
@@ -96,7 +96,7 @@ def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, su
 def place_bet(current_bet: list, player: Player, players: deque, language: bool) -> list:
     load_memory(player, current_bet, players)
     add_turns_to_player(player, players)
-    text_player_bet(language, player, current_bet)
+    Print.text_player_bet(language, player, current_bet)
     previous_bet = current_bet
     liar_statement = False
     return [liar_statement, previous_bet]
