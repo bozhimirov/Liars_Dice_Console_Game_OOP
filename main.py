@@ -89,7 +89,8 @@ class Game:
 
     def new_roll(self):
         self.players_turn = roll_dice(Player.game_players, self.game_round)
-        Print.line(self.english_language)
+        Print.line()
+        print('line')
         Print.text_new_round_number(self.english_language, self.game_round, self.players_names, self.sum_dice)
 
     def human_bet(self, player_input_bet):
