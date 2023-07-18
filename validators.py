@@ -1,4 +1,5 @@
 from print import Print
+import re
 
 
 class Validators:
@@ -18,11 +19,16 @@ class Validators:
 
     # -- validate name of human player / cannot be blank / --
     @staticmethod
-    def validate_name(name: str, language: bool) -> str:
-        if len(name) < 2:
+    def validate_name(name: str, language: bool, list_of_bots: list) -> str:
+        if name in list_of_bots:
+            Print.text_choose_name_again(language)
+            new_human_name = input().strip()
+            new_name = Validators.validate_name(new_human_name, language, list_of_bots)
+            return new_name
+        elif len(name) < 2 or type(name) != str or name[0].isnumeric() or not re.match('^[a-z0-9_]*$', name):
             Print.text_name_len_more_than_two(language)
             new_human_name = input().strip()
-            new_name = Validators.validate_name(new_human_name, language)
+            new_name = Validators.validate_name(new_human_name, language, list_of_bots)
             return new_name
         return name
 
@@ -99,7 +105,7 @@ class Validators:
         elif human_answer.lower() == 'b':
             return False
         else:
-            text_valid_language()
+            Print.text_valid_language()
             new_human_answer = input().strip()
             language = Validators.validate_language(new_human_answer)
             return language

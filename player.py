@@ -5,6 +5,7 @@ from collections import deque
 # -- player class to create both human and bot players --
 class Player:
     game_players = deque()
+    human_player = None
 
     def __init__(self, player_name: str) -> None:
         self.turns = 1
@@ -56,3 +57,4 @@ class Player:
 class HumanPlayer(Player):
     def __init__(self, player_name: str) -> None:
         super().__init__(player_name)
+        Player.human_player = self

@@ -4,8 +4,8 @@ from betting_helpers import calc_bet_according_to_temper, bluff_bet, place_bet
 from helper_functions import roll_dice
 from list_of_opponents import list_names_of_bots
 from pause import pause
-from player import Player
-from player_helpers import add_player, create_list_of_players, get_players_name, choosing_player_to_start, next_turn, \
+from player import Player, HumanPlayer
+from player_helpers import create_list_of_players, get_players_name, choosing_player_to_start, next_turn, \
     get_next_bidder, if_liar
 from validators import Validators
 from print import Print
@@ -23,7 +23,7 @@ class Game(Validators, Print):
         self.players_turn = {}
         self.game_round = 0
         self.liar = False
-        self.human_player_name = ''
+        # self.human_player_name = ''
 
     def language(self):
         self.text_choose_language()
@@ -31,8 +31,8 @@ class Game(Validators, Print):
         return english_language
 
     def create_human_player(self, player_input_name: str) -> None:
-        self.human_player_name = self.validate_name(player_input_name.strip(), self.english_language)
-        add_player(self.human_player_name, list_names_of_bots, Player.game_players, self.english_language)
+        human_player_name = self.validate_name(player_input_name.strip(), self.english_language, list_names_of_bots)
+        HumanPlayer(human_player_name)
         pause(0.5)
 
     def create_opponents(self, player_input_bots):
@@ -59,7 +59,7 @@ class Game(Validators, Print):
             self.text_choosing_player(self.english_language)
             index_of_player_index = random.randint(0, len(Player.game_players) - 1)
             starter_player = Player.game_players[index_of_player_index].name
-            choosing_player_to_start(starter_player, Player.game_players, self.players_names)
+            choosing_player_to_start(starter_player, Player.game_players)
             self.text_who_starts_the_game(self.english_language, Player.game_players)
             Player.restore_dice_players()
 
@@ -98,9 +98,9 @@ class Game(Validators, Print):
             while Player.game_players[0].name not in self.players_names:
                 next_turn(Player.game_players)
             current_bidder = Player.game_players[0].name
-            if current_bidder == self.human_player_name:
+            if current_bidder == Player.human_player.name:
                 self.text_your_turn_and_info(self.english_language, sum_dice, self.players_turn,
-                                             self.human_player_name)
+                                             Player.human_player.name)
 
                 if len(self.last_bidder) > 0:
                     self.text_if_there_is_last_bidder(self.english_language, self.last_bidder)

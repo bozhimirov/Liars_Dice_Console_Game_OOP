@@ -7,32 +7,21 @@ from print import Print
 from stats_memory_players import get_player_by_name
 
 
-# -- adding player object --
-def add_player(player: str, list_names_of_bots: list, game_players: deque, language: bool) -> deque:
-    if player not in list_names_of_bots:
-        Player(player)
-        return Player.game_players
-    else:
-        Print.text_choose_name_again(language)
-        human = add_player(input(), list_names_of_bots, game_players, language)
-        return human
-
-
 # -- choosing number of bots and creates list of players with human player --
-def create_list_of_players(number_of_bots: str, list_names_of_bots: list, game_players: deque, language: bool) -> int:
+def create_list_of_players(number_of_bots: str, list_names_of_bots: list, game_players: deque, language: bool) -> None:
+    list_of_bots = list_names_of_bots
     if number_of_bots.isdigit():
-        if 0 < int(number_of_bots) <= len(list_names_of_bots):
+        if 0 < int(number_of_bots) <= len(list_of_bots):
             for j in range(int(number_of_bots)):
-                c = list_names_of_bots[random.randint(0, len(list_names_of_bots) - 1)]
-                list_names_of_bots.remove(c)
-                add_player(c, list_names_of_bots, game_players, language)
-            return int(number_of_bots)
+                c = list_of_bots[random.randint(0, len(list_names_of_bots) - 1)]
+                list_of_bots.remove(c)
+                Player(c)
         else:
-            Print.text_incorrect_input_opponents(language, list_names_of_bots)
-            create_list_of_players(input(), list_names_of_bots, game_players, language)
+            Print.text_incorrect_input_opponents(language, list_of_bots)
+            create_list_of_players(input(), list_of_bots, game_players, language)
     else:
 
-        Print.text_incorrect_input_opponents(language)
+        Print.text_incorrect_input_opponents(language, list_names_of_bots)
         create_list_of_players(input(), list_names_of_bots, game_players, language)
 
 
@@ -87,23 +76,22 @@ def check_who_lose_die(c_bidder: Player, l_bidder: Player, players_turns: dict, 
         Print.text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, l_bidder)
         remove_dice(g_players, l_bidder)
         g_players_names = players_active(g_players, g_players_names, language)
-        choosing_player_to_start(l_bidder, g_players, g_players_names)
+        choosing_player_to_start(l_bidder, g_players)
     else:
-
         Print.text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, c_bidder)
         remove_dice(g_players, c_bidder)
         g_players_names = players_active(g_players, g_players_names, language)
-        choosing_player_to_start(c_bidder, g_players, g_players_names)
+        choosing_player_to_start(c_bidder, g_players)
     return g_players_names
 
 
 #  -- choose player with dice to start round --
-def choosing_player_to_start(player: Player, games_players: deque, players_names: list) -> None:
-    if len(players_names) > 1:
-        while player != games_players[0].name:
-            next_turn(games_players)
-        if games_players[0].dice == 0:
-            next_turn(games_players)
+def choosing_player_to_start(player: Player, games_players: deque) -> None:
+    while player != games_players[0].name:
+        next_turn(games_players)
+        # to check if the following is needed
+    if games_players[0].dice == 0:
+        next_turn(games_players)
 
 
 #  -- get the next bidder with dice from players --
