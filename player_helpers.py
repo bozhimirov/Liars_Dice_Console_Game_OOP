@@ -155,3 +155,8 @@ def remove_dice(game_players: deque, loser: Player):
     player = get_player_by_name(loser, game_players)
     if player.dice > 0:
         player.dice -= 1
+
+
+# -- action if someone is called a liar --
+def if_liar():
+    pass

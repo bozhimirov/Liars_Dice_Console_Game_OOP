@@ -90,8 +90,10 @@ class Game:
     def new_roll(self):
         self.players_turn = roll_dice(Player.game_players, self.game_round)
         Print.line()
-        print('line')
         Print.text_new_round_number(self.english_language, self.game_round, self.players_names, self.sum_dice)
+        self.check_who_is_liar = False
+        self.last_bidder = ''
+        self.old_bet = ['0', '0']
 
     def human_bet(self, player_input_bet):
         action = validate_input_action(player_input_bet.strip(), self.english_language)
@@ -115,17 +117,18 @@ class Game:
                     if action == 'bet':
                         Print.text_place_bet(self.english_language)
                         new_human_bet = validate_if_bet_is_valid(self.english_language, self.old_bet, self.sum_dice)
-                        liar, old_bet = place_bet(new_human_bet, current_bidder, Player.game_players,
-                                                  self.english_language)
+                        self.liar, self.old_bet = place_bet(new_human_bet, current_bidder, Player.game_players,
+                                                            self.english_language)
 
                     else:
-                        liar = True
+                        self.liar = True
                 elif self.old_bet == [self.sum_dice, 6]:
-                    liar = True
+                    self.liar = True
                 else:
                     Print.text_place_bet(self.english_language)
                     new_human_bet = validate_if_bet_is_valid(self.english_language, self.old_bet, self.sum_dice)
-                    liar, old_bet = place_bet(new_human_bet, current_bidder, Player.game_players, self.english_language)
+                    self.liar, self.old_bet = place_bet(new_human_bet, current_bidder, Player.game_players,
+                                                        self.english_language)
 
                 pause()
 
@@ -154,13 +157,14 @@ class Game:
                     self.check_who_is_liar = True
                     break
                 elif self.old_bet == [self.sum_dice, 6]:
-                    liar = True
+                    self.liar = True
                 elif new_bet[0] > (self.sum_dice - next_bidder.dice) and self.last_bidder != '':
-                    liar = True
+                    self.liar = True
                 else:
-                    liar, old_bet = place_bet(new_bet, current_bidder, Player.game_players, self.english_language)
+                    self.liar, self.old_bet = place_bet(new_bet, current_bidder, Player.game_players,
+                                                        self.english_language)
 
-            if liar:
+            if self.liar:
                 pause()
                 print_if_liar(current_bidder, self.last_bidder, self.players_turn, self.english_language)
                 self.players_names = check_who_lose_die(current_bidder, self.last_bidder, self.players_turn,
