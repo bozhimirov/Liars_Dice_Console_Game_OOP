@@ -4,7 +4,6 @@ from collections import deque
 
 # -- player class to create both human and bot players --
 class Player:
-
     game_players = deque()
 
     def __init__(self, player_name: str) -> None:
@@ -31,6 +30,10 @@ class Player:
     def restore_dice(self) -> None:
         self.dice = 5
 
+    @staticmethod
+    def restore_dice_players() -> None:
+        [player.restore_dice() for player in Player.game_players]
+
     def clear_stat(self) -> None:
         self.stat = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
 
@@ -43,3 +46,13 @@ class Player:
     def calculate_temper_for_opponents(self) -> None:
         self.temper_for_other_players = self.profile_for_opponents['tempers'] / self.profile_for_opponents[
             'total_calls']
+
+    # -- the sum of all dices on the table --
+    @staticmethod
+    def check_sum_dice() -> int:
+        return sum([player.dice for player in Player.game_players])
+
+
+class HumanPlayer(Player):
+    def __init__(self, player_name: str) -> None:
+        super().__init__(player_name)

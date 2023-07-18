@@ -21,14 +21,14 @@ def add_player(player: str, list_names_of_bots: list, game_players: deque, langu
 # -- choosing number of bots and creates list of players with human player --
 def create_list_of_players(number_of_bots: str, list_names_of_bots: list, game_players: deque, language: bool) -> int:
     if number_of_bots.isdigit():
-        if 0 < int(number_of_bots) <= 10:
+        if 0 < int(number_of_bots) <= len(list_names_of_bots):
             for j in range(int(number_of_bots)):
                 c = list_names_of_bots[random.randint(0, len(list_names_of_bots) - 1)]
                 list_names_of_bots.remove(c)
                 add_player(c, list_names_of_bots, game_players, language)
             return int(number_of_bots)
         else:
-            Print.text_incorrect_input_opponents(language)
+            Print.text_incorrect_input_opponents(language, list_names_of_bots)
             create_list_of_players(input(), list_names_of_bots, game_players, language)
     else:
 
@@ -158,5 +158,12 @@ def remove_dice(game_players: deque, loser: Player):
 
 
 # -- action if someone is called a liar --
-def if_liar():
-    pass
+def if_liar(current_bidder, last_bidder, players_turn, english_language, old_bet, game_players, players_names,
+            wild_mode):
+    print_if_liar(current_bidder, last_bidder, players_turn, english_language)
+    players_names = check_who_lose_die(current_bidder, last_bidder, players_turn, old_bet, game_players, players_names,
+                                       wild_mode, english_language)
+
+    check_if_players_are_bluffing(game_players, wild_mode)
+    check_who_is_liar = True
+    return [players_names, check_who_is_liar]

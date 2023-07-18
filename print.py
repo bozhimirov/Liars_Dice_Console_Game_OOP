@@ -7,6 +7,20 @@ from player import Player
 
 class Print:
 
+    # -- function to print text on console asking for game language--
+    @classmethod
+    def text_choose_language(cls) -> None:
+        print("Choose language/Избери език")
+        print("Please type 'e' for English or/или напишете 'b' за Български")
+
+    # -- print ask for valid language choice --
+    @classmethod
+    def text_valid_language(cls) -> None:
+        print("Please make your choice by pressing 'e' or 'b' button on your keyboard!")
+        print("Моля натиснете 'e' или 'b' бутона на клавиатурата!")
+        print("By pressing 'е' you will play the game in English. By pressing 'b' you will play the game in Bulgarian.")
+        print("Натискайки 'e' ще играете играта на английски език. Натискайки 'b' ще играете играта на български език.")
+
     # -- function to print text on console asking for player's name--
     @staticmethod
     def text_choose_name(english_language: bool) -> None:
@@ -67,8 +81,8 @@ class Print:
     # -- print asks for length more than 2 symbols --
     @staticmethod
     def text_name_len_more_than_two(english_language: bool) -> None:
-        choose_language(english_language, "Please write a name longer than 2 symbols!",
-                        "Моля напишете име с дължина повече от 2 символа!")
+        choose_language(english_language, "Please write a name longer than 2 symbols(numbers and letters) and start with a letter!",
+                        "Моля напишете име с дължина повече от 2 символа(букви и цифри), започващо с буква!")
 
     # -- print ask for valid choice --
     @staticmethod
@@ -104,10 +118,10 @@ class Print:
 
     # -- print ask for new number of opponents --
     @staticmethod
-    def text_incorrect_input_opponents(english_language: bool) -> None:
+    def text_incorrect_input_opponents(english_language: bool, list_names_of_bots: list) -> None:
         choose_language(english_language,
-                        "Incorrect input. Please type just one number for opponents between 1 and 10.",
-                        "Грешна стойност. Моля напишете само едно число за брой противници в интервала от 1 до 10.")
+                        f"Incorrect input. Please type just one number for opponents between 1 and {len(list_names_of_bots)}.",
+                        f"Грешна стойност. Моля напишете само едно число за брой противници в интервала от 1 до {len(list_names_of_bots)}.")
 
     # -- get verb according to language --
     @staticmethod

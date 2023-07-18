@@ -6,7 +6,7 @@ from print import Print
 from player_helpers import get_player_by_name, add_turns_to_player
 from probability_calculation import calculate_probability
 from stats_memory_players import load_memory
-from validators import valid_bet
+from validators import Validators
 
 
 # --calculate test new  bet --
@@ -75,14 +75,14 @@ def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, su
             if (v > prev_count and k == prev_dice) or (1 <= v <= sum_of_dice and k > prev_dice):
                 if (v - prev_count) >= 0 or (player.memory[1] - prev_count) >= 0:
                     v = prev_count + 1
-                if valid_bet([v, k], last_bet, sum_of_dice):
+                if Validators.valid_bet([v, k], last_bet, sum_of_dice):
                     new_test_bet = [v, k]
                     break
         else:
             if (v > prev_count and k == prev_dice) or (1 <= v <= sum_of_dice and k > prev_dice):
                 if (v - prev_count) >= 0:
                     v = prev_count + 1
-                if valid_bet([v, k], last_bet, sum_of_dice):
+                if Validators.valid_bet([v, k], last_bet, sum_of_dice):
                     new_test_bet = [v, k]
                     break
 
@@ -220,11 +220,11 @@ def bluff_bet(prev_bet: list, sum_of_dice: int, current_player: Player, last_pla
                         new_count = random.randint((index + 1), (index + 2))
                         dice_modifier(prev_dice, wild)
                         new_bet_to_be_checked = [new_count, new_dice]
-                        valid_condition = valid_bet(new_bet_to_be_checked, prev_bet, sum_of_dice)
+                        valid_condition = Validators.valid_bet(new_bet_to_be_checked, prev_bet, sum_of_dice)
                         if valid_condition:
                             break
                 new_bet_to_be_checked = [new_count, new_dice]
-                valid_condition = valid_bet(new_bet_to_be_checked, prev_bet, sum_of_dice)
+                valid_condition = Validators.valid_bet(new_bet_to_be_checked, prev_bet, sum_of_dice)
                 if valid_condition:
                     return new_bet_to_be_checked
             return new_bet_to_be_checked
@@ -261,11 +261,11 @@ def bluff_bet(prev_bet: list, sum_of_dice: int, current_player: Player, last_pla
                 else:
                     new_dice = prev_dice + 1
                 new_bet_to_be_checked = [new_count, new_dice]
-                valid_condition = valid_bet(new_bet_to_be_checked, prev_bet, sum_of_dice)
+                valid_condition = Validators.valid_bet(new_bet_to_be_checked, prev_bet, sum_of_dice)
                 if valid_condition:
                     break
         new_bet_to_be_checked = [new_count, new_dice]
-        valid_condition = valid_bet(new_bet_to_be_checked, prev_bet, sum_of_dice)
+        valid_condition = Validators.valid_bet(new_bet_to_be_checked, prev_bet, sum_of_dice)
         if valid_condition:
             return new_bet_to_be_checked
     return []
