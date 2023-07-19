@@ -3,18 +3,18 @@ from collections import deque
 
 from player import Player
 from print import Print
-from player_helpers import get_player_by_name, add_turns_to_player
+from player_helpers import add_turn_to_player
 from probability_calculation import calculate_probability
 from stats_memory_players import load_memory
 from validators import Validators
 
 
 # --calculate test new  bet --
-def calculate_new_bet(last_bet: list, player: Player, last_player: Player, sum_of_dice: int, players: deque, wild: bool,
+def calculate_new_bet(last_bet: list, player: Player, last_player: Player, sum_of_dice: int, wild: bool,
                       opponents_chance: float) -> list:
     if last_player != '':
-        if type(last_player) == str:
-            last_player = get_player_by_name(last_player, players)
+        # if type(last_player) == str:
+        #     last_player = get_player_by_name(last_player, players)
         neo_bet = []
 
         if 0 < last_player.temper_for_other_players < 0.55:
@@ -29,17 +29,17 @@ def calculate_new_bet(last_bet: list, player: Player, last_player: Player, sum_o
 
         else:
             sum_dice_in_memory, probability_by_memory, new_test_bet = if_not_blank_bet(
-                player, last_bet, opponents_chance, sum_of_dice, players, wild, last_player)
+                player, last_bet, opponents_chance, sum_of_dice, wild, last_player)
 
             if sum_dice_in_memory < sum_of_dice and probability_by_memory > 0.6:
                 neo_bet = new_test_bet
             elif opponents_chance != 0:
                 neo_bet = []
             else:
-                neo_bet = bluff_bet(last_bet, sum_of_dice, player, last_player, players, wild, opponents_chance)
+                neo_bet = bluff_bet(last_bet, sum_of_dice, player, last_player, wild, opponents_chance)
 
         if opponents_chance > 0.9 and neo_bet == []:
-            neo_bet = bluff_bet(last_bet, sum_of_dice, player, last_player, players, wild, opponents_chance)
+            neo_bet = bluff_bet(last_bet, sum_of_dice, player, last_player, wild, opponents_chance)
         if player.temper < 0.55:
             coefficient = 0.2
             if wild:
@@ -56,15 +56,15 @@ def calculate_new_bet(last_bet: list, player: Player, last_player: Player, sum_o
         return neo_bet
     else:
         sum_dice_in_memory, probability_by_memory, new_test_bet = if_not_blank_bet(
-            player, last_bet, opponents_chance, sum_of_dice, players, wild, last_player)
+            player, last_bet, opponents_chance, sum_of_dice, wild, last_player)
         return new_test_bet
 
 
 #  -- if the new bet is not blank(call previous player liar) --
-def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, sum_of_dice: int, players: deque,
-                     wild: bool, last_player: Player) -> list:
-    if type(player) == str:
-        player = get_player_by_name(player, players)
+def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, sum_of_dice: int, wild: bool,
+                     last_player: Player) -> list:
+    # if type(player) == str:
+    #     player = get_player_by_name(player, players)
     prev_count, prev_dice = last_bet
     prev_count = int(prev_count)
     prev_dice = int(prev_dice)
@@ -88,14 +88,14 @@ def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, su
 
     probability_by_memory = calculate_probability(last_bet, sum_of_dice, player, wild, 'memory')
     if opponents_chance > 0.6 and len(new_test_bet) == 0:
-        new_test_bet = bluff_bet(last_bet, sum_of_dice, player, last_player, players, wild, opponents_chance)
+        new_test_bet = bluff_bet(last_bet, sum_of_dice, player, last_player, wild, opponents_chance)
     return [sum_dice_in_memory, probability_by_memory, new_test_bet]
 
 
 # -- place bet on table --
 def place_bet(current_bet: list, player: Player, players: deque, language: bool) -> list:
     load_memory(player, current_bet, players)
-    add_turns_to_player(player, players)
+    add_turn_to_player(player)
     Print.text_player_bet(language, player, current_bet)
     previous_bet = current_bet
     liar_statement = False
@@ -104,56 +104,55 @@ def place_bet(current_bet: list, player: Player, players: deque, language: bool)
 
 #  -- according to temper and times player places bet in the round, choose if the bet is bluff or not --
 def calc_bet_according_to_temper(last_bet: list, current_player: Player, last_player: Player, sum_of_dice: int,
-                                 players: deque, wild: bool) -> list:
+                                 wild: bool) -> list:
     new_bet_to_be_checked = []
-    current_player_object = get_player_by_name(current_player, players)
     opponents_chance = 0
-    if type(last_player) == str:
-        if last_player != '':
-            last_player = get_player_by_name(last_player, players)
-            opponents_chance = calculate_probability(
-                last_bet, sum_of_dice, last_player, wild, keyword='memory')
+    # if type(last_player) == str:
+    #     if last_player != '':
+    #         last_player = get_player_by_name(last_player, players)
+    #         opponents_chance = calculate_probability(
+    #             last_bet, sum_of_dice, last_player, wild, keyword='memory')
 
-    if current_player_object.temper <= 0.35:
-        if current_player_object.turns % 3 == 0:
+    if current_player.temper <= 0.35:
+        if current_player.turns % 3 == 0:
             new_bet_to_be_checked = calculate_new_bet(
-                last_bet, current_player_object, last_player, sum_of_dice, players, wild, opponents_chance)
+                last_bet, current_player, last_player, sum_of_dice, wild, opponents_chance)
         else:
             new_bet_to_be_checked = bluff_bet(
-                last_bet, sum_of_dice, current_player_object, last_player, players, wild, opponents_chance)
-    elif 0.35 < current_player_object.temper <= 0.55:
-        if current_player_object.turns % 2 == 0:
+                last_bet, sum_of_dice, current_player, last_player, wild, opponents_chance)
+    elif 0.35 < current_player.temper <= 0.55:
+        if current_player.turns % 2 == 0:
             new_bet_to_be_checked = calculate_new_bet(
-                last_bet, current_player_object, last_player, sum_of_dice, players, wild, opponents_chance)
+                last_bet, current_player, last_player, sum_of_dice, wild, opponents_chance)
         else:
             new_bet_to_be_checked = bluff_bet(
-                last_bet, sum_of_dice, current_player_object, last_player, players, wild, opponents_chance)
-    elif 0.55 < current_player_object.temper <= 0.75:
-        if current_player_object.turns % 3 == 0:
+                last_bet, sum_of_dice, current_player, last_player, wild, opponents_chance)
+    elif 0.55 < current_player.temper <= 0.75:
+        if current_player.turns % 3 == 0:
             new_bet_to_be_checked = bluff_bet(
-                last_bet, sum_of_dice, current_player_object, last_player, players, wild, opponents_chance)
+                last_bet, sum_of_dice, current_player, last_player, wild, opponents_chance)
         else:
             new_bet_to_be_checked = calculate_new_bet(
-                last_bet, current_player_object, last_player, sum_of_dice, players, wild, opponents_chance)
-    elif current_player_object.temper > 0.75:
-        if current_player_object.turns % 4 == 0:
+                last_bet, current_player, last_player, sum_of_dice, wild, opponents_chance)
+    elif current_player.temper > 0.75:
+        if current_player.turns % 4 == 0:
             new_bet_to_be_checked = bluff_bet(
-                last_bet, sum_of_dice, current_player_object, last_player, players, wild, opponents_chance)
+                last_bet, sum_of_dice, current_player, last_player, wild, opponents_chance)
         else:
             new_bet_to_be_checked = calculate_new_bet(
-                last_bet, current_player_object, last_player, sum_of_dice, players, wild, opponents_chance)
+                last_bet, current_player, last_player, sum_of_dice, wild, opponents_chance)
     # --- returning empty bet equal to calling liar ---
     if int(last_bet[0]) >= sum_of_dice:
         new_bet_to_be_checked = []
     elif int(last_bet[1]) != 0:
         if wild:
             if int(last_bet[0]) > \
-                    (sum_of_dice - current_player_object.dice) + current_player_object.stat[int(last_bet[1])] + \
-                    current_player_object.stat[1]:
+                    (sum_of_dice - current_player.dice) + current_player.stat[int(last_bet[1])] + \
+                    current_player.stat[1]:
                 new_bet_to_be_checked = []
         else:
             if int(last_bet[0]) > \
-                    (sum_of_dice - current_player_object.dice) + current_player_object.stat[int(last_bet[1])]:
+                    (sum_of_dice - current_player.dice) + current_player.stat[int(last_bet[1])]:
                 new_bet_to_be_checked = []
 
     return new_bet_to_be_checked
@@ -175,14 +174,14 @@ def dice_modifier(prev_dice: int, wild: bool) -> list:
     return [prev_dice, new_dice]
 
 
-def bluff_bet(prev_bet: list, sum_of_dice: int, current_player: Player, last_player: Player, players: deque, wild: bool,
+def bluff_bet(prev_bet: list, sum_of_dice: int, current_player: Player, last_player: Player, wild: bool,
               opponents_chance: float) -> list:
-    if type(current_player) == str:
-        current_player = get_player_by_name(current_player, players)
+    # if type(current_player) == str:
+    #     current_player = get_player_by_name(current_player, players)
     if last_player != '':
         new_bet_to_be_checked = []
-        if type(last_player) == str:
-            last_player = get_player_by_name(last_player, players)
+        # if type(last_player) == str:
+        #     last_player = get_player_by_name(last_player, players)
         if wild:
             if int(prev_bet[0]) > \
                     sum_of_dice - current_player.memory[int(prev_bet[1])] - current_player.memory[1] - last_player.dice:

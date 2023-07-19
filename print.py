@@ -81,7 +81,8 @@ class Print:
     # -- print asks for length more than 2 symbols --
     @staticmethod
     def text_name_len_more_than_two(english_language: bool) -> None:
-        choose_language(english_language, "Please write a name longer than 2 symbols(numbers and letters) and start with a letter!",
+        choose_language(english_language, "Please write a name longer than 2 symbols(numbers and letters)"
+                                          " and start with a letter!",
                         "Моля напишете име с дължина повече от 2 символа(букви и цифри), започващо с буква!")
 
     # -- print ask for valid choice --
@@ -120,8 +121,10 @@ class Print:
     @staticmethod
     def text_incorrect_input_opponents(english_language: bool, list_names_of_bots: list) -> None:
         choose_language(english_language,
-                        f"Incorrect input. Please type just one number for opponents between 1 and {len(list_names_of_bots)}.",
-                        f"Грешна стойност. Моля напишете само едно число за брой противници в интервала от 1 до {len(list_names_of_bots)}.")
+                        f"Incorrect input. Please type just one number for opponents between 1 and"
+                        f" {len(list_names_of_bots)}.",
+                        f"Грешна стойност. Моля напишете само едно число за брой противници в интервала от 1 до"
+                        f" {len(list_names_of_bots)}.")
 
     # -- get verb according to language --
     @staticmethod
@@ -170,10 +173,10 @@ class Print:
 
     # -- print text if there is a last winner with options for bet or call liar--
     @staticmethod
-    def text_if_there_is_last_bidder(english_language: bool, last_bidder: str) -> None:
+    def text_if_there_is_last_bidder(english_language: bool, last_bidder: Player) -> None:
         Print.ask_for_choice(english_language)
-        choose_language(english_language, f"Place a bet [b] or call {last_bidder} a liar [l]?",
-                        f"Направи залог [b] или наречи {last_bidder} лъжец [l]?")
+        choose_language(english_language, f"Place a bet [b] or call {last_bidder.name} a liar [l]?",
+                        f"Направи залог [b] или наречи {last_bidder.name} лъжец [l]?")
 
     # -- print announcement of winner and congrats --
     @staticmethod
@@ -188,9 +191,11 @@ class Print:
     def text_player_bet(english_language: bool, player: Player, current_bet: list) -> None:
         bg_word = 'зар' if current_bet[0] == 1 else 'зара'
         choose_language(english_language,
-                        f'{player} bet for at least {current_bet[0]} dice with face number'
+                        f'{player.name} bet for at least {current_bet[0]} dice with face number'
+                        # f'{player} bet for at least {current_bet[0]} dice with face number'
                         f' {current_bet[1]}.',
-                        f'{player} залага за най-малко {current_bet[0]} {bg_word} със стойност'
+                        f'{player.name} залага за най-малко {current_bet[0]} {bg_word} със стойност'
+                        # f'{player} залага за най-малко {current_bet[0]} {bg_word} със стойност'
                         f' {current_bet[1]}.')
         pause()
 
@@ -204,19 +209,19 @@ class Print:
     # -- print result and who lost a die --
     @staticmethod
     def text_result_and_who_lose_die(english_language: bool, number_of_dices_of_searched_number: int,
-                                     searched_number: int, l_bidder: str) -> None:
+                                     searched_number: int, l_bidder: Player) -> None:
         choose_language(english_language,
                         f'There are {number_of_dices_of_searched_number} numbers of {searched_number} dices.'
-                        f' {l_bidder} '
+                        f' {l_bidder.name} '
                         f'lose a dice.',
                         f'Има {number_of_dices_of_searched_number} броя зара със стойност {searched_number}'
-                        f'. {l_bidder} губи зарче.')
+                        f'. {l_bidder.name} губи зарче.')
         pause()
 
     # -- print someone call other liar --
     @staticmethod
-    def text_someone_call_other_liar(english_language: bool, current_player: str, last_player: str) -> None:
-        choose_language(english_language, f'{current_player} called {last_player} a liar.'
+    def text_someone_call_other_liar(english_language: bool, current_player: Player, last_player: Player) -> None:
+        choose_language(english_language, f'{current_player.name} called {last_player.name} a liar.'
                                           f' Everyone showing their dice.',
-                        f'{current_player} нарече {last_player} лъжец. Всички играчи показват заровете си.')
+                        f'{current_player.name} нарече {last_player.name} лъжец. Всички играчи показват заровете си.')
         pause()

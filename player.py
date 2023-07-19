@@ -4,6 +4,7 @@ from collections import deque
 
 # -- player class to create both human and bot players --
 class Player:
+    # -- filled immediately after initialization --
     game_players = deque()
     human_player = None
 
@@ -27,6 +28,9 @@ class Player:
         self.temper_for_other_players = 0
 
         Player.game_players.append(self)
+
+    def __len__(self):
+        return len(self.name)
 
     def restore_dice(self) -> None:
         self.dice = 5

@@ -4,7 +4,6 @@ from collections import deque
 from pause import pause
 from player import Player
 from print import Print
-from stats_memory_players import get_player_by_name
 
 
 # -- choosing number of bots and creates list of players with human player --
@@ -36,9 +35,8 @@ def get_players_name(players: deque) -> list:
 
 
 # -- adds how many times player place a bet to self, helps to place bluffs according to temper --
-def add_turns_to_player(player: Player, players: deque) -> None:
-    current_player = get_player_by_name(player, players)
-    current_player.turns += 1
+def add_turn_to_player(player: Player) -> None:
+    player.turns += 1
 
 
 # -- show inactive player if any --
@@ -74,12 +72,12 @@ def check_who_lose_die(c_bidder: Player, l_bidder: Player, players_turns: dict, 
                     number_of_dices_of_searched_number += 1
     if number_of_dices_of_searched_number < int(last_bet[0]):
         Print.text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, l_bidder)
-        remove_dice(g_players, l_bidder)
+        remove_dice(l_bidder)
         g_players_names = players_active(g_players, g_players_names, language)
         choosing_player_to_start(l_bidder, g_players)
     else:
         Print.text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, c_bidder)
-        remove_dice(g_players, c_bidder)
+        remove_dice(c_bidder)
         g_players_names = players_active(g_players, g_players_names, language)
         choosing_player_to_start(c_bidder, g_players)
     return g_players_names
@@ -87,7 +85,7 @@ def check_who_lose_die(c_bidder: Player, l_bidder: Player, players_turns: dict, 
 
 #  -- choose player with dice to start round --
 def choosing_player_to_start(player: Player, games_players: deque) -> None:
-    while player != games_players[0].name:
+    while player != games_players[0]:
         next_turn(games_players)
         # to check if the following is needed
     if games_players[0].dice == 0:
@@ -125,7 +123,7 @@ def check_if_players_are_bluffing(players: deque, wild: bool) -> None:
 
 
 #  -- when someone is challenged show dice in players hand --
-def print_if_liar(current_player: str, last_player: str, player_turn: dict, language: bool) -> None:
+def print_if_liar(current_player: Player, last_player: Player, player_turn: dict, language: bool) -> None:
     Print.text_someone_call_other_liar(language, current_player, last_player)
     showing_string = ''
     for pln, d in player_turn.items():
@@ -139,15 +137,14 @@ def print_if_liar(current_player: str, last_player: str, player_turn: dict, lang
 
 
 #  -- remove dice from player --
-def remove_dice(game_players: deque, loser: Player):
-    player = get_player_by_name(loser, game_players)
-    if player.dice > 0:
-        player.dice -= 1
+def remove_dice(loser: Player):
+    if loser.dice > 0:
+        loser.dice -= 1
 
 
 # -- action if someone is called a liar --
-def if_liar(current_bidder, last_bidder, players_turn, english_language, old_bet, game_players, players_names,
-            wild_mode):
+def if_liar(current_bidder: Player, last_bidder: Player, players_turn, english_language, old_bet, game_players,
+            players_names, wild_mode):
     print_if_liar(current_bidder, last_bidder, players_turn, english_language)
     players_names = check_who_lose_die(current_bidder, last_bidder, players_turn, old_bet, game_players, players_names,
                                        wild_mode, english_language)

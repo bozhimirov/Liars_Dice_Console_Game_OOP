@@ -23,7 +23,6 @@ class Game(Validators, Print):
         self.players_turn = {}
         self.game_round = 0
         self.liar = False
-        # self.human_player_name = ''
 
     def language(self):
         self.text_choose_language()
@@ -32,19 +31,19 @@ class Game(Validators, Print):
 
     def create_human_player(self, player_input_name: str) -> None:
         human_player_name = self.validate_name(player_input_name.strip(), self.english_language, list_names_of_bots)
-        HumanPlayer(human_player_name)
+        Player.human_player = HumanPlayer(human_player_name)
         pause(0.5)
 
-    def create_opponents(self, player_input_bots):
+    def create_opponents(self, player_input_bots: str) -> None:
         create_list_of_players(player_input_bots.strip(), list_names_of_bots, Player.game_players,
                                self.english_language)
         pause(0.5)
 
-    def choose_mode(self, player_input_mode):
+    def choose_mode(self, player_input_mode: str) -> None:
         self.wild_mode = self.validate_game_mode(player_input_mode.strip(), self.english_language)
         pause(0.5)
 
-    def choose_end(self, player_input_end):
+    def choose_end(self, player_input_end: str) -> None:
         self.active_game = self.validate_input_answer(player_input_end.strip(), self.english_language)
         pause()
 
@@ -58,7 +57,7 @@ class Game(Validators, Print):
             self.text_tell_len_players(self.english_language, self.players_names)
             self.text_choosing_player(self.english_language)
             index_of_player_index = random.randint(0, len(Player.game_players) - 1)
-            starter_player = Player.game_players[index_of_player_index].name
+            starter_player = Player.game_players[index_of_player_index]
             choosing_player_to_start(starter_player, Player.game_players)
             self.text_who_starts_the_game(self.english_language, Player.game_players)
             Player.restore_dice_players()
@@ -87,7 +86,7 @@ class Game(Validators, Print):
         self.last_bidder = ''
         self.old_bet = ['0', '0']
 
-    def human_bet(self, player_input_bet):
+    def human_bet(self, player_input_bet: str) -> str:
         action = self.validate_input_action(player_input_bet.strip(), self.english_language)
         pause(0.5)
         return action
@@ -97,8 +96,8 @@ class Game(Validators, Print):
             sum_dice = Player.check_sum_dice()
             while Player.game_players[0].name not in self.players_names:
                 next_turn(Player.game_players)
-            current_bidder = Player.game_players[0].name
-            if current_bidder == Player.human_player.name:
+            current_bidder = Player.game_players[0]
+            if current_bidder == Player.human_player:
                 self.text_your_turn_and_info(self.english_language, sum_dice, self.players_turn,
                                              Player.human_player.name)
 
@@ -127,14 +126,13 @@ class Game(Validators, Print):
 
             else:
                 new_bet = calc_bet_according_to_temper(self.old_bet, current_bidder, self.last_bidder, sum_dice,
-                                                       Player.game_players, self.wild_mode)
+                                                       self.wild_mode)
                 next_bidder = get_next_bidder(Player.game_players)
                 if new_bet:
                     if self.last_bidder == '':
                         while int(new_bet[0]) > (sum_dice - next_bidder.dice):
                             new_bet_to_be_checked_again = bluff_bet(
-                                self.old_bet, sum_dice, current_bidder, self.last_bidder, Player.game_players,
-                                self.wild_mode, 0)
+                                self.old_bet, sum_dice, current_bidder, self.last_bidder, self.wild_mode, 0)
                             new_bet = new_bet_to_be_checked_again
                     else:
                         if int(new_bet[0]) > (sum_dice - next_bidder.dice):
