@@ -5,7 +5,7 @@ from helper_functions import roll_dice
 from list_of_opponents import list_names_of_bots
 from pause import pause
 from player import Player, HumanPlayer
-from player_helpers import create_list_of_players, get_players_name, choosing_player_to_start, next_turn, \
+from player_helpers import create_list_of_players, choosing_player_to_start, next_turn, \
     get_next_bidder, if_liar
 from validators import Validators
 from print import Print
@@ -53,7 +53,7 @@ class Game(Validators, Print):
         self.game_round = 0
 
         while self.active_game:
-            self.players_names = get_players_name(Player.game_players)
+            self.players_names = Player.take_names_of_players()
             self.text_tell_len_players(self.english_language, self.players_names)
             self.text_choosing_player(self.english_language)
             index_of_player_index = random.randint(0, len(Player.game_players) - 1)
@@ -66,13 +66,12 @@ class Game(Validators, Print):
 
             self.text_tell_winner(self.english_language, self.players_names)
             self.text_new_game_option(self.english_language)
-
             self.choose_end(input())
 
     def new_round(self):
+
         while len(self.players_names) > 1:
             self.game_round += 1
-
             self.new_roll()
             self.while_not_liar()
 

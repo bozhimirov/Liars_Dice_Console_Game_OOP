@@ -7,6 +7,7 @@ class Player:
     # -- filled immediately after initialization --
     game_players = deque()
     human_player = None
+    game_players_names = []
 
     def __init__(self, player_name: str) -> None:
         self.turns = 1
@@ -28,9 +29,13 @@ class Player:
         self.temper_for_other_players = 0
 
         Player.game_players.append(self)
+        Player.game_players_names.append(self.name)
 
     def __len__(self):
         return len(self.name)
+
+    def get_temper(self):
+        return self.temper_for_other_players
 
     def restore_dice(self) -> None:
         self.dice = 5
@@ -56,6 +61,12 @@ class Player:
     @staticmethod
     def check_sum_dice() -> int:
         return sum([player.dice for player in Player.game_players])
+
+    # -- the sum of all dices on the table --
+    @staticmethod
+    def take_names_of_players() -> list:
+        Player.game_players_names = [player.name for player in Player.game_players]
+        return Player.game_players_names
 
 
 class HumanPlayer(Player):

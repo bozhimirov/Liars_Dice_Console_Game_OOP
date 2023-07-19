@@ -28,10 +28,10 @@ def create_list_of_players(number_of_bots: str, list_names_of_bots: list, game_p
 def next_turn(players: deque) -> None:
     players.append(players.popleft())
 
-
-#  -- get names of the players --
-def get_players_name(players: deque) -> list:
-    return [p.name for p in players]
+#
+# #  -- get names of the players --
+# def get_players_name(players: deque) -> list:
+#     return [p.name for p in players]
 
 
 # -- adds how many times player place a bet to self, helps to place bluffs according to temper --
@@ -41,20 +41,16 @@ def add_turn_to_player(player: Player) -> None:
 
 # -- show inactive player if any --
 def players_active(players: deque, game_players_names: list, language: bool) -> list:
-    game_players_names = game_players_names
-    players_names = []
-    inactive_names = []
+    active_players_names = game_players_names
+    # players_names = []
+    # inactive_names = []
     for player in players:
-        if player.name in game_players_names:
+        if player.name in active_players_names:
             if player.dice == 0:
-                inactive_names.append(player.name)
-            else:
-                players_names.append(player.name)
-    if inactive_names:
-        Print.text_left_game(language, inactive_names)
-        return players_names
-    else:
-        return players_names
+                Print.text_left_game(language, player)
+                active_players_names.remove(player.name)
+
+    return active_players_names
 
 
 #  -- check which player lose a die

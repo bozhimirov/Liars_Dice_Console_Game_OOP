@@ -25,7 +25,7 @@ class Validators:
             new_human_name = input().strip()
             new_name = Validators.validate_name(new_human_name, language, list_of_bots)
             return new_name
-        elif len(name) < 2 or type(name) != str or name[0].isnumeric() or not re.match('^[a-z0-9_]*$', name):
+        elif len(name) < 2 or type(name) != str or name[0].isnumeric() or not re.match('^[A-Za-z0-9_]*$', name):
             Print.text_name_len_more_than_two(language)
             new_human_name = input().strip()
             new_name = Validators.validate_name(new_human_name, language, list_of_bots)

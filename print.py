@@ -201,9 +201,9 @@ class Print:
 
     # -- print who left the game --
     @staticmethod
-    def text_left_game(english_language: bool, inactive_names: list) -> None:
-        choose_language(english_language, f'Player {inactive_names[0]} left the game.',
-                        f'Играч {inactive_names[0]} напусна играта.')
+    def text_left_game(english_language: bool, inactive_name: Player) -> None:
+        choose_language(english_language, f'Player {inactive_name.name} left the game.',
+                        f'Играч {inactive_name.name} напусна играта.')
         pause()
 
     # -- print result and who lost a die --
