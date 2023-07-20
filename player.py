@@ -10,6 +10,7 @@ class Player:
     game_players_names = []
 
     def __init__(self, player_name: str) -> None:
+        # # -- how many times player place a bet, helps to place bluffs according to temper --
         self.turns = 1
         self.name = player_name
         self.dice = 5
@@ -31,10 +32,12 @@ class Player:
         Player.game_players.append(self)
         Player.game_players_names.append(self.name)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.name)
 
-    def get_temper(self):
+    # -- if player want to know how bots are rating their temper from 0 - liar to 1 - trustworthy --
+    # -- not implemented --
+    def get_temper(self) -> float:
         return self.temper_for_other_players
 
     def restore_dice(self) -> None:
@@ -47,8 +50,27 @@ class Player:
     def clear_stat(self) -> None:
         self.stat = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
 
+    #  -- load dice values when new round starts --
+    def load_stat(self, data: list) -> None:
+        for i in range(len(data)):
+            self.stat[data[i]] += 1
+
     def clear_memory(self) -> None:
         self.memory = {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}
+
+    #  -- load self dices to memory --
+    def load_initial_memory(self, data: list) -> None:
+        for i in range(len(data)):
+            self.memory[data[i]] += 1
+
+    #  -- load other players bets to memory if their stat is trustworthy--
+    def load_memory(self, bet: list) -> None:
+        for player in Player.game_players:
+            if self != player and self.temper_for_other_players > 0.55:
+                player.memory[int(bet[1])] += 1
+            elif self == player and player.dice != 0:
+                player.profile_for_opponents['called_dice'][0] += 1
+                player.profile_for_opponents['called_dice'][1][int(bet[1])] += 1
 
     def clear_dice_stat_profile_for_opponents(self) -> None:
         self.profile_for_opponents['called_dice'] = [0, {1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0}]

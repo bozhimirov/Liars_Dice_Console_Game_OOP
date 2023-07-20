@@ -1,5 +1,4 @@
-from helper_functions import choose_language
-from pause import pause
+from helper_functions import choose_language, pause
 from collections import deque
 
 from player import Player
@@ -192,10 +191,8 @@ class Print:
         bg_word = 'зар' if current_bet[0] == 1 else 'зара'
         choose_language(english_language,
                         f'{player.name} bet for at least {current_bet[0]} dice with face number'
-                        # f'{player} bet for at least {current_bet[0]} dice with face number'
                         f' {current_bet[1]}.',
                         f'{player.name} залага за най-малко {current_bet[0]} {bg_word} със стойност'
-                        # f'{player} залага за най-малко {current_bet[0]} {bg_word} със стойност'
                         f' {current_bet[1]}.')
         pause()
 
@@ -224,4 +221,18 @@ class Print:
         choose_language(english_language, f'{current_player.name} called {last_player.name} a liar.'
                                           f' Everyone showing their dice.',
                         f'{current_player.name} нарече {last_player.name} лъжец. Всички играчи показват заровете си.')
+        pause()
+
+    #  -- when someone is challenged show dice in players hand --
+    @staticmethod
+    def print_if_liar(current_player: Player, last_player: Player, player_turn: dict, language: bool) -> None:
+        Print.text_someone_call_other_liar(language, current_player, last_player)
+        showing_string = ''
+        for pln, d in player_turn.items():
+            showing_string += pln
+            word = Print.get_verb(language)
+            showing_string += str(word)
+            showing_string += ', '.join(map(str, d))
+            showing_string += ' ; '
+        print(f'{showing_string[:-2]}')
         pause()

@@ -1,11 +1,8 @@
 import random
-from collections import deque
 
 from player import Player
 from print import Print
-from player_helpers import add_turn_to_player
 from probability_calculation import calculate_probability
-from stats_memory_players import load_memory
 from validators import Validators
 
 
@@ -13,8 +10,6 @@ from validators import Validators
 def calculate_new_bet(last_bet: list, player: Player, last_player: Player, sum_of_dice: int, wild: bool,
                       opponents_chance: float) -> list:
     if last_player != '':
-        # if type(last_player) == str:
-        #     last_player = get_player_by_name(last_player, players)
         neo_bet = []
 
         if 0 < last_player.temper_for_other_players < 0.55:
@@ -63,8 +58,6 @@ def calculate_new_bet(last_bet: list, player: Player, last_player: Player, sum_o
 #  -- if the new bet is not blank(call previous player liar) --
 def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, sum_of_dice: int, wild: bool,
                      last_player: Player) -> list:
-    # if type(player) == str:
-    #     player = get_player_by_name(player, players)
     prev_count, prev_dice = last_bet
     prev_count = int(prev_count)
     prev_dice = int(prev_dice)
@@ -93,9 +86,9 @@ def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, su
 
 
 # -- place bet on table --
-def place_bet(current_bet: list, player: Player, players: deque, language: bool) -> list:
-    load_memory(player, current_bet, players)
-    add_turn_to_player(player)
+def place_bet(current_bet: list, player: Player, language: bool) -> list:
+    player.load_memory(current_bet)
+    player.turns += 1
     Print.text_player_bet(language, player, current_bet)
     previous_bet = current_bet
     liar_statement = False
@@ -107,11 +100,6 @@ def calc_bet_according_to_temper(last_bet: list, current_player: Player, last_pl
                                  wild: bool) -> list:
     new_bet_to_be_checked = []
     opponents_chance = 0
-    # if type(last_player) == str:
-    #     if last_player != '':
-    #         last_player = get_player_by_name(last_player, players)
-    #         opponents_chance = calculate_probability(
-    #             last_bet, sum_of_dice, last_player, wild, keyword='memory')
 
     if current_player.temper <= 0.35:
         if current_player.turns % 3 == 0:
@@ -176,12 +164,8 @@ def dice_modifier(prev_dice: int, wild: bool) -> list:
 
 def bluff_bet(prev_bet: list, sum_of_dice: int, current_player: Player, last_player: Player, wild: bool,
               opponents_chance: float) -> list:
-    # if type(current_player) == str:
-    #     current_player = get_player_by_name(current_player, players)
     if last_player != '':
         new_bet_to_be_checked = []
-        # if type(last_player) == str:
-        #     last_player = get_player_by_name(last_player, players)
         if wild:
             if int(prev_bet[0]) > \
                     sum_of_dice - current_player.memory[int(prev_bet[1])] - current_player.memory[1] - last_player.dice:

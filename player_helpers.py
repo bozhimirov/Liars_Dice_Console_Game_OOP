@@ -1,9 +1,9 @@
 import random
 from collections import deque
-
-from pause import pause
+from betting_helpers import place_bet, calc_bet_according_to_temper, bluff_bet
 from player import Player
 from print import Print
+from validators import Validators
 
 
 # -- choosing number of bots and creates list of players with human player --
@@ -28,22 +28,10 @@ def create_list_of_players(number_of_bots: str, list_names_of_bots: list, game_p
 def next_turn(players: deque) -> None:
     players.append(players.popleft())
 
-#
-# #  -- get names of the players --
-# def get_players_name(players: deque) -> list:
-#     return [p.name for p in players]
-
-
-# -- adds how many times player place a bet to self, helps to place bluffs according to temper --
-def add_turn_to_player(player: Player) -> None:
-    player.turns += 1
-
 
 # -- show inactive player if any --
 def players_active(players: deque, game_players_names: list, language: bool) -> list:
     active_players_names = game_players_names
-    # players_names = []
-    # inactive_names = []
     for player in players:
         if player.name in active_players_names:
             if player.dice == 0:
@@ -68,12 +56,12 @@ def check_who_lose_die(c_bidder: Player, l_bidder: Player, players_turns: dict, 
                     number_of_dices_of_searched_number += 1
     if number_of_dices_of_searched_number < int(last_bet[0]):
         Print.text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, l_bidder)
-        remove_dice(l_bidder)
+        l_bidder.dice -= 1
         g_players_names = players_active(g_players, g_players_names, language)
         choosing_player_to_start(l_bidder, g_players)
     else:
         Print.text_result_and_who_lose_die(language, number_of_dices_of_searched_number, searched_number, c_bidder)
-        remove_dice(c_bidder)
+        c_bidder.dice -= 1
         g_players_names = players_active(g_players, g_players_names, language)
         choosing_player_to_start(c_bidder, g_players)
     return g_players_names
@@ -118,33 +106,54 @@ def check_if_players_are_bluffing(players: deque, wild: bool) -> None:
         player.calculate_temper_for_opponents()
 
 
-#  -- when someone is challenged show dice in players hand --
-def print_if_liar(current_player: Player, last_player: Player, player_turn: dict, language: bool) -> None:
-    Print.text_someone_call_other_liar(language, current_player, last_player)
-    showing_string = ''
-    for pln, d in player_turn.items():
-        showing_string += pln
-        word = Print.get_verb(language)
-        showing_string += str(word)
-        showing_string += ', '.join(map(str, d))
-        showing_string += ' ; '
-    print(f'{showing_string[:-2]}')
-    pause()
-
-
-#  -- remove dice from player --
-def remove_dice(loser: Player):
-    if loser.dice > 0:
-        loser.dice -= 1
-
-
 # -- action if someone is called a liar --
 def if_liar(current_bidder: Player, last_bidder: Player, players_turn, english_language, old_bet, game_players,
             players_names, wild_mode):
-    print_if_liar(current_bidder, last_bidder, players_turn, english_language)
+    Print.print_if_liar(current_bidder, last_bidder, players_turn, english_language)
     players_names = check_who_lose_die(current_bidder, last_bidder, players_turn, old_bet, game_players, players_names,
                                        wild_mode, english_language)
 
     check_if_players_are_bluffing(game_players, wild_mode)
     check_who_is_liar = True
     return [players_names, check_who_is_liar]
+
+
+def if_player_human(current_bidder, english_language, sum_dice, players_turn, last_bidder, old_bet):
+    old_bet = old_bet
+    Print.text_your_turn_and_info(english_language, sum_dice, players_turn,
+                                  Player.human_player.name)
+    if old_bet == [sum_dice, 6]:
+        liar = True
+        return [liar, old_bet]
+    elif len(last_bidder) > 0:
+        Print.text_if_there_is_last_bidder(english_language, last_bidder)
+
+        action = Validators.validate_input_action(input(), english_language)
+
+        if action == 'bet':
+            Print.text_place_bet(english_language)
+            new_human_bet = Validators.validate_if_bet_is_valid(english_language, old_bet, sum_dice)
+            return place_bet(new_human_bet, current_bidder, english_language)
+
+        else:
+            liar = True
+            return [liar, old_bet]
+    else:
+        Print.text_place_bet(english_language)
+        new_human_bet = Validators.validate_if_bet_is_valid(english_language, old_bet, sum_dice)
+        return place_bet(new_human_bet, current_bidder, english_language)
+
+
+def if_player_bot(old_bet, current_bidder, last_bidder, sum_dice, wild_mode):
+    new_bet = calc_bet_according_to_temper(old_bet, current_bidder, last_bidder, sum_dice, wild_mode)
+    next_bidder = get_next_bidder(Player.game_players)
+    if new_bet:
+        if last_bidder == '':
+            while int(new_bet[0]) > (sum_dice - next_bidder.dice):
+                new_bet_to_be_checked_again = bluff_bet(old_bet, sum_dice, current_bidder, last_bidder, wild_mode,
+                                                        0)
+                new_bet = new_bet_to_be_checked_again
+        else:
+            if int(new_bet[0]) > (sum_dice - next_bidder.dice):
+                new_bet = []
+    return new_bet, next_bidder

@@ -1,7 +1,11 @@
 import random
+import time
 from collections import deque
 
-from stats_memory_players import load_stat, load_initial_memory
+
+#  -- initiate time pause --
+def pause(a: float = 2.0) -> None:
+    time.sleep(a)
 
 
 #  -- roll dice when starting new round --
@@ -18,8 +22,8 @@ def roll_dice(players: deque, g_round: int) -> dict:
                 dice_number = random.randint(1, 6)
                 cells.append(dice_number)
             players_turns[player.name] = sorted(cells)
-            load_stat(player, cells)
-            load_initial_memory(player, cells)
+            player.load_stat(cells)
+            player.load_initial_memory(cells)
     return players_turns
 
 
