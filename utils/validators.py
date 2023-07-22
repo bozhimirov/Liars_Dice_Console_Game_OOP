@@ -1,4 +1,4 @@
-from print import Print
+from utils.output import Output
 import re
 
 
@@ -12,7 +12,7 @@ class Validators:
         elif string.lower() == 'l':
             return 'liar'
         else:
-            Print.text_valid_action_again(language)
+            Output.text_valid_action_again(language)
             new_human_string = input().strip()
             human_action = Validators.validate_input_action(new_human_string, language)
             return human_action
@@ -21,12 +21,12 @@ class Validators:
     @staticmethod
     def validate_name(name: str, language: bool, list_of_bots: list) -> str:
         if name in list_of_bots:
-            Print.text_choose_name_again(language)
+            Output.text_choose_name_again(language)
             new_human_name = input().strip()
             new_name = Validators.validate_name(new_human_name, language, list_of_bots)
             return new_name
         elif len(name) < 2 or type(name) != str or name[0].isnumeric() or not re.match('^[A-Za-z0-9_]*$', name):
-            Print.text_name_len_more_than_two(language)
+            Output.text_name_len_more_than_two(language)
             new_human_name = input().strip()
             new_name = Validators.validate_name(new_human_name, language, list_of_bots)
             return new_name
@@ -42,7 +42,7 @@ class Validators:
             game_active = False
             return game_active
         else:
-            Print.text_make_valid_choice(language)
+            Output.text_make_valid_choice(language)
             new_human_answer = input().strip()
             new_game_active = Validators.validate_input_answer(new_human_answer, language)
             return new_game_active
@@ -57,7 +57,7 @@ class Validators:
             w_mode = False
             return w_mode
         else:
-            Print.text_choose_valid_mode(language)
+            Output.text_choose_valid_mode(language)
             new_human_answer = input().strip()
             new_w_mode = Validators.validate_input_answer(new_human_answer, language)
             return new_w_mode
@@ -71,7 +71,7 @@ class Validators:
                 .split(' ')
             valid_human_bet = Validators.valid_bet(new_human_bet, old_bet, sum_dice)
             if not valid_human_bet:
-                Print.text_valid_bet_again(language)
+                Output.text_valid_bet_again(language)
         return new_human_bet
 
     # -- validate bets --
@@ -105,7 +105,7 @@ class Validators:
         elif human_answer.lower() == 'b':
             return False
         else:
-            Print.text_valid_language()
+            Output.text_valid_language()
             new_human_answer = input().strip()
             language = Validators.validate_language(new_human_answer)
             return language

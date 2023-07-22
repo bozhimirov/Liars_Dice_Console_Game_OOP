@@ -1,7 +1,7 @@
 import random
 
-from player import Player
-from print import Print
+from player_utils.player import Player
+from output import Output
 from probability_calculation import calculate_probability
 from validators import Validators
 
@@ -89,7 +89,7 @@ def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, su
 def place_bet(current_bet: list, player: Player, language: bool) -> list:
     player.load_memory(current_bet)
     player.turns += 1
-    Print.text_player_bet(language, player, current_bet)
+    Output.text_player_bet(language, player, current_bet)
     previous_bet = current_bet
     liar_statement = False
     return [liar_statement, previous_bet]

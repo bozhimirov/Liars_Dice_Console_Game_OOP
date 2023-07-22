@@ -1,16 +1,16 @@
 import random
 
-from betting_helpers import place_bet
-from helper_functions import roll_dice, pause
-from list_of_opponents import list_names_of_bots
-from player import Player, HumanPlayer
-from player_helpers import create_list_of_players, choosing_player_to_start, next_turn, if_liar, if_player_human, \
+from utils.betting_helpers import place_bet
+from utils.helper_functions import roll_dice, pause
+from utils.list_of_opponents import list_names_of_bots
+from player_utils.player import Player, HumanPlayer
+from player_utils.player_helpers import create_list_of_players, choosing_player_to_start, next_turn, if_liar, if_player_human, \
     if_player_bot
-from validators import Validators
-from print import Print
+from utils.validators import Validators
+from utils.output import Output
 
 
-class Game(Validators, Print):
+class Game(Validators, Output):
     def __init__(self) -> None:
         self.english_language = True
         self.wild_mode = False

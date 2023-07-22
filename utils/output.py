@@ -1,10 +1,10 @@
-from helper_functions import choose_language, pause
+from utils.helper_functions import choose_language, pause
 from collections import deque
 
-from player import Player
+from player_utils.player import Player
 
 
-class Print:
+class Output:
 
     # -- function to print text on console asking for game language--
     @classmethod
@@ -58,7 +58,7 @@ class Print:
     # -- print text asking valid bet --
     @staticmethod
     def text_place_bet(english_language: bool) -> None:
-        Print.ask_for_choice(english_language)
+        Output.ask_for_choice(english_language)
         choose_language(english_language,
                         'Place your bet in format [count of dice] [face of die] separated by space.',
                         'Направи залог във формат [брой зарове] [стойност на зара] разделени с интервал.')
@@ -173,7 +173,7 @@ class Print:
     # -- print text if there is a last winner with options for bet or call liar--
     @staticmethod
     def text_if_there_is_last_bidder(english_language: bool, last_bidder: Player) -> None:
-        Print.ask_for_choice(english_language)
+        Output.ask_for_choice(english_language)
         choose_language(english_language, f"Place a bet [b] or call {last_bidder.name} a liar [l]?",
                         f"Направи залог [b] или наречи {last_bidder.name} лъжец [l]?")
 
@@ -226,11 +226,11 @@ class Print:
     #  -- when someone is challenged show dice in players hand --
     @staticmethod
     def print_if_liar(current_player: Player, last_player: Player, player_turn: dict, language: bool) -> None:
-        Print.text_someone_call_other_liar(language, current_player, last_player)
+        Output.text_someone_call_other_liar(language, current_player, last_player)
         showing_string = ''
         for pln, d in player_turn.items():
             showing_string += pln
-            word = Print.get_verb(language)
+            word = Output.get_verb(language)
             showing_string += str(word)
             showing_string += ', '.join(map(str, d))
             showing_string += ' ; '

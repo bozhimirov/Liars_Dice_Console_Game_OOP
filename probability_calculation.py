@@ -1,6 +1,6 @@
 import math
 
-from player import Player
+from player_utils.player import Player
 
 
 #  -- calculate probability using binomial distribution--
