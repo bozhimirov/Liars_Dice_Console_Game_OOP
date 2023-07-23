@@ -4,8 +4,8 @@ from utils.betting_helpers import place_bet
 from utils.helper_functions import roll_dice, pause
 from utils.list_of_opponents import list_names_of_bots
 from player_utils.player import Player, HumanPlayer
-from player_utils.player_helpers import create_list_of_players, choosing_player_to_start, next_turn, if_liar, if_player_human, \
-    if_player_bot
+from player_utils.player_helpers import create_list_of_players, choosing_player_to_start, next_turn, if_liar, \
+    if_player_human, if_player_bot
 from utils.validators import Validators
 from utils.output import Output
 
@@ -78,7 +78,7 @@ class Game(Validators, Output):
     def new_roll(self) -> None:
 
         sum_dice = Player.check_sum_dice()
-        self.players_turn = roll_dice(Player.game_players, self.game_round)
+        self.players_turn = roll_dice(Player.game_players)
         self.line()
         self.text_new_round_number(self.english_language, self.game_round, self.players_names, sum_dice)
         self.check_who_is_liar = False
