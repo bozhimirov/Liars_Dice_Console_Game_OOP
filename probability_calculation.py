@@ -6,6 +6,17 @@ from player_utils.player import Player
 #  -- calculate probability using binomial distribution--
 def calculate_probability(bet: list, sum_of_dice: int, current_player: Player, wild: bool,
                           keyword: str = 'stat') -> float:
+    """
+    Calculate probability using binomial distribution
+    :param bet: list of number of bet dice and the value of that bet
+    :param sum_of_dice: number of all dice on the table
+    :param current_player: player object that made the current bet
+    :param wild: bool value that indicates the game mode
+    :param keyword: string with default value 'stat' that indicates that probability is calculated based on own dice
+        in current hand
+    :return: float number from 0 to 1 that indicates the probability of placed bet to be valid when number close to 1 is
+        with very high probability
+    """
     p = 1 / 6
     if wild:
         p = 1 / 3

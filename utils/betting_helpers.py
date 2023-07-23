@@ -1,9 +1,9 @@
 import random
 
 from player_utils.player import Player
-from output import Output
+from utils.output import Output
 from probability_calculation import calculate_probability
-from validators import Validators
+from utils.validators import Validators
 
 
 # --calculate test new  bet --
