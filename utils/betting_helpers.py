@@ -9,6 +9,18 @@ from utils.validators import Validators
 # --calculate test new  bet --
 def calculate_new_bet(last_bet: list, player: Player, last_player: Player, sum_of_dice: int, wild: bool,
                       opponents_chance: float) -> list:
+    """
+    Calculates new bet according to memory and dice in hand
+    :param last_bet: list of values for last bet
+    :param player: current player object for current bidder
+    :param last_player: player object for last bidder
+    :param sum_of_dice: number of dice on the table
+    :param wild: bool value that indicates the game mode
+    :param opponents_chance: float number from 0 to 1 that indicates the probability of placed bet to be valid when
+     number close to 1 is
+        with very high probability
+    :return: list of values for new bet
+    """
     if last_player != '':
         neo_bet = []
 
@@ -58,6 +70,18 @@ def calculate_new_bet(last_bet: list, player: Player, last_player: Player, sum_o
 #  -- if the new bet is not blank(call previous player liar) --
 def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, sum_of_dice: int, wild: bool,
                      last_player: Player) -> list:
+    """
+    Calculates new bet according to memory and dice in hand
+    :param player: current player object for current bidder
+    :param last_bet: list of values for last bet
+    :param opponents_chance: float number from 0 to 1 that indicates the probability of placed bet to be valid when
+     number close to 1 is
+        with very high probability
+    :param sum_of_dice: number of dice on the table
+    :param wild: bool value that indicates the game mode
+    :param last_player: player object for last bidder
+    :return: list with sum of dice, probability for win with last bet and new bet
+    """
     prev_count, prev_dice = last_bet
     prev_count = int(prev_count)
     prev_dice = int(prev_dice)
@@ -87,6 +111,14 @@ def if_not_blank_bet(player: Player, last_bet: list, opponents_chance: float, su
 
 # -- place bet on table --
 def place_bet(current_bet: list, player: Player, language: bool) -> list:
+    """
+    Player place a new bet on the table and saves stats in memory
+    :param current_bet: list of values for current bet
+    :param player: current player object
+    :param language: bool variable showing the choice of the user for language of communication
+                According to that variable user receives instructions on desired language
+    :return: list with liar statement and list with dice values for previous bet
+    """
     player.load_memory(current_bet)
     player.turns += 1
     Output.text_player_bet(language, player, current_bet)
@@ -98,6 +130,16 @@ def place_bet(current_bet: list, player: Player, language: bool) -> list:
 #  -- according to temper and times player places bet in the round, choose if the bet is bluff or not --
 def calc_bet_according_to_temper(last_bet: list, current_player: Player, last_player: Player, sum_of_dice: int,
                                  wild: bool) -> list:
+    """
+    Returns bet according to temper, if temper is more like a liar - bet is a bluff bet, else it is bet according to
+        dice in hand
+    :param last_bet: list of values for last bet
+    :param current_player: player object for current bidder
+    :param last_player: player object for last bidder
+    :param sum_of_dice: number of dice on the table
+    :param wild: bool value that indicates the game mode
+    :return: list with values of new bet
+    """
     new_bet_to_be_checked = []
     opponents_chance = 0
 
@@ -148,6 +190,12 @@ def calc_bet_according_to_temper(last_bet: list, current_player: Player, last_pl
 
 #  -- calculate bluff bet --
 def dice_modifier(prev_dice: int, wild: bool) -> list:
+    """
+    Modifies dice values according to game mode
+    :param prev_dice: int with face value of die
+    :param wild: bool value that indicates the game mode
+    :return: list with previous die value and new die value
+    """
     if prev_dice == 6:
         new_dice = 6
     elif prev_dice == 0:
@@ -164,6 +212,18 @@ def dice_modifier(prev_dice: int, wild: bool) -> list:
 
 def bluff_bet(prev_bet: list, sum_of_dice: int, current_player: Player, last_player: Player, wild: bool,
               opponents_chance: float) -> list:
+    """
+    Makes bluff bet according to mode and previous conditions
+    :param prev_bet: list of values for last bet
+    :param sum_of_dice: number of dice on the table
+    :param current_player: player object for current bidder
+    :param last_player: player object for last bidder
+    :param wild: bool value that indicates the game mode
+    :param opponents_chance: float number from 0 to 1 that indicates the probability of placed bet to be valid when
+     number close to 1 is
+        with very high probability
+    :return: list with values of new bet
+    """
     if last_player != '':
         new_bet_to_be_checked = []
         if wild:

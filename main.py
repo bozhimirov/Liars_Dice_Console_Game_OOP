@@ -11,7 +11,13 @@ from utils.output import Output
 
 
 class Game(Validators, Output):
+    """
+    Game class for starting new game
+    """
     def __init__(self) -> None:
+        """
+        constructor that initialize the game with some variables that are used later in the game
+        """
         self.english_language = True
         self.wild_mode = False
         self.active_game = True
@@ -24,29 +30,52 @@ class Game(Validators, Output):
         self.players_names = []
 
     def language(self) -> bool:
+        """
+        Prompts user to choose the desired language for the game
+        :return: bool variable showing the choice of the user for language of communication
+                According to that variable user receives instructions on desired language
+        """
         self.text_choose_language()
         english_language = self.validate_language(input().strip())
         return english_language
 
     def create_human_player(self, player_input_name: str) -> None:
+        """
+        Create human player object
+        :param player_input_name: string with the username of the human player
+        """
         human_player_name = self.validate_name(player_input_name.strip(), self.english_language, list_names_of_bots)
         Player.human_player = HumanPlayer(human_player_name)
         pause(0.5)
 
     def create_opponents(self, player_input_bots: str) -> None:
-        create_list_of_players(player_input_bots.strip(), list_names_of_bots, Player.game_players,
-                               self.english_language)
+        """
+        Create bot players according to the number that user choose
+        :param player_input_bots: string that shows the number of bots chosen by user for the game
+        """
+        create_list_of_players(player_input_bots.strip(), list_names_of_bots, self.english_language)
         pause(0.5)
 
     def choose_mode(self, player_input_mode: str) -> None:
+        """
+        Choose game mode by typing string
+        :param player_input_mode: string validating the game mode
+        """
         self.wild_mode = self.validate_game_mode(player_input_mode.strip(), self.english_language)
         pause(0.5)
 
     def choose_end(self, player_input_end: str) -> None:
+        """
+        Player have to choose to play another game with the same opponents or end game
+        :param player_input_end: string validating the player's choice
+        """
         self.active_game = self.validate_input_answer(player_input_end.strip(), self.english_language)
         pause()
 
     def new_game(self) -> None:
+        """
+        New game started
+        """
 
         self.players_turn = {}
         self.game_round = 0
@@ -68,6 +97,9 @@ class Game(Validators, Output):
             self.choose_end(input())
 
     def new_round(self) -> None:
+        """
+        New round started
+        """
 
         while len(self.players_names) > 1:
             self.game_round += 1
@@ -76,6 +108,9 @@ class Game(Validators, Output):
             self.while_not_liar()
 
     def new_roll(self) -> None:
+        """
+        New roll of dice
+        """
 
         sum_dice = Player.check_sum_dice()
         self.players_turn = roll_dice(Player.game_players)
@@ -86,11 +121,19 @@ class Game(Validators, Output):
         self.old_bet = ['0', '0']
 
     def human_bet(self, player_input_bet: str) -> str:
+        """
+        Human place bet
+        :param player_input_bet: string validating bet placed
+        :return: string that show the action that player choose
+        """
         action = self.validate_input_action(player_input_bet.strip(), self.english_language)
         pause(0.5)
         return action
 
     def while_not_liar(self) -> None:
+        """
+        Game is played until someone call other player a liar
+        """
         while not self.check_who_is_liar:
             sum_dice = Player.check_sum_dice()
             while Player.game_players[0].name not in self.players_names:
@@ -129,6 +172,9 @@ class Game(Validators, Output):
             self.check_who_is_liar = False
 
     def run(self) -> None:
+        """
+        Run new game
+        """
         self.text_choose_name(self.english_language)
         self.create_human_player(input())
         self.text_choose_opponents(self.english_language)
