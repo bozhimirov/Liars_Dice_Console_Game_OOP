@@ -2,6 +2,7 @@ import random
 from collections import deque
 from utils.betting_helpers import place_bet, calc_bet_according_to_temper, bluff_bet
 from player_utils.player import Player
+from utils.helper_functions import return_text
 from utils.output import Output
 from utils.validators import Validators
 
@@ -15,6 +16,7 @@ def create_list_of_players(number_of_bots: str, list_names_of_bots: list, langua
     :param language: bool variable showing the choice of the user for language of communication
                 According to that variable user receives instructions on desired language
     """
+    text = return_text(language, 'Your choice: ', 'Вашият избор: ')
     list_of_bots = list_names_of_bots
     if number_of_bots.isdigit():
         if 0 < int(number_of_bots) <= len(list_of_bots):
@@ -24,11 +26,11 @@ def create_list_of_players(number_of_bots: str, list_names_of_bots: list, langua
                 Player(c)
         else:
             Output.text_incorrect_input_opponents(language, list_of_bots)
-            create_list_of_players(input(), list_of_bots, language)
+            create_list_of_players(input(text), list_of_bots, language)
     else:
 
         Output.text_incorrect_input_opponents(language, list_names_of_bots)
-        create_list_of_players(input(), list_names_of_bots, language)
+        create_list_of_players(input(text), list_names_of_bots, language)
 
 
 # -- rotate players --
@@ -193,13 +195,14 @@ def if_player_human(current_bidder, english_language, sum_dice, players_turn, la
     old_bet = old_bet
     Output.text_your_turn_and_info(english_language, sum_dice, players_turn,
                                    Player.human_player.name)
+    text_action = return_text(english_language, 'Your choice: ', 'Вашият избор: ')
     if old_bet == [sum_dice, 6]:
         liar = True
         return [liar, old_bet]
     elif len(last_bidder) > 0:
         Output.text_if_there_is_last_bidder(english_language, last_bidder)
 
-        action = Validators.validate_input_action(input(), english_language)
+        action = Validators.validate_input_action(input(text_action), english_language)
 
         if action == 'bet':
             Output.text_place_bet(english_language)

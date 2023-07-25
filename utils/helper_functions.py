@@ -48,3 +48,18 @@ def choose_language(english_language: bool, english: str, bulgarian: str) -> Non
         print(english)
     else:
         print(bulgarian)
+
+
+# -- return text according to game language --
+def return_text(english_language: bool, english: str, bulgarian: str) -> str:
+    """
+    Function that choose which parameter to display upon desired language from user
+    :param english_language: bool variable showing the choice of the user for language of communication
+                According to that variable user receives instructions on desired language
+    :param english: string in english language
+    :param bulgarian: string in bulgarian language
+    """
+    if english_language:
+        return english
+    else:
+        return bulgarian

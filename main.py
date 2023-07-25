@@ -1,7 +1,7 @@
 import random
 
 from utils.betting_helpers import place_bet
-from utils.helper_functions import roll_dice, pause
+from utils.helper_functions import roll_dice, pause, return_text
 from utils.list_of_opponents import list_names_of_bots
 from player_utils.player import Player, HumanPlayer
 from player_utils.player_helpers import create_list_of_players, choosing_player_to_start, next_turn, if_liar, \
@@ -36,7 +36,7 @@ class Game(Validators, Output):
                 According to that variable user receives instructions on desired language
         """
         self.text_choose_language()
-        english_language = self.validate_language(input().strip())
+        english_language = self.validate_language(input("Your choice/Твоят избор: ").strip())
         return english_language
 
     def create_human_player(self, player_input_name: str) -> None:
@@ -94,7 +94,8 @@ class Game(Validators, Output):
 
             self.text_tell_winner(self.english_language, self.players_names)
             self.text_new_game_option(self.english_language)
-            self.choose_end(input())
+            text_answer = return_text(self.english_language, 'Your choice: ', 'Вашият избор: ')
+            self.choose_end(input(text_answer))
 
     def new_round(self) -> None:
         """
@@ -175,12 +176,14 @@ class Game(Validators, Output):
         """
         Run new game
         """
+        text = return_text(self.english_language, 'Your choice: ', 'Вашият избор: ')
         self.text_choose_name(self.english_language)
-        self.create_human_player(input())
+        text_name = return_text(self.english_language, 'Username: ', 'Име: ')
+        self.create_human_player(input(text_name))
         self.text_choose_opponents(self.english_language)
-        self.create_opponents(input())
+        self.create_opponents(input(text))
         self.text_choose_mode(self.english_language)
-        self.choose_mode(input())
+        self.choose_mode(input(text))
         self.new_game()
 
 

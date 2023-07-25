@@ -1,3 +1,4 @@
+from utils.helper_functions import return_text
 from utils.output import Output
 import re
 
@@ -14,13 +15,14 @@ class Validators:
                 According to that variable user receives instructions on desired language.
         :return: string with validated input action
         """
+        text_action = return_text(language, 'Your choice: ', 'Вашият избор: ')
         if string.lower() == 'b':
             return 'bet'
         elif string.lower() == 'l':
             return 'liar'
         else:
             Output.text_valid_action_again(language)
-            new_human_string = input().strip()
+            new_human_string = input(text_action).strip()
             human_action = Validators.validate_input_action(new_human_string, language)
             return human_action
 
@@ -35,14 +37,15 @@ class Validators:
         :param list_of_bots: list of names of all bot players already predefined
         :return: string with validated input name
         """
+        text_name = return_text(language, 'Username: ', 'Име: ')
         if name in list_of_bots:
             Output.text_choose_name_again(language)
-            new_human_name = input().strip()
+            new_human_name = input(text_name).strip()
             new_name = Validators.validate_name(new_human_name, language, list_of_bots)
             return new_name
         elif len(name) < 2 or type(name) != str or name[0].isnumeric() or not re.match('^[A-Za-z0-9_]*$', name):
             Output.text_name_len_more_than_two(language)
-            new_human_name = input().strip()
+            new_human_name = input(text_name).strip()
             new_name = Validators.validate_name(new_human_name, language, list_of_bots)
             return new_name
         return name
@@ -57,6 +60,7 @@ class Validators:
                 According to that variable user receives instructions on desired language
         :return: bool that indicates if user wants to continue with another game
         """
+        text_answer = return_text(language, 'Your choice: ', 'Вашият избор: ')
         if human_answer.lower() == 'y':
             game_active = True
             return game_active
@@ -65,7 +69,7 @@ class Validators:
             return game_active
         else:
             Output.text_make_valid_choice(language)
-            new_human_answer = input().strip()
+            new_human_answer = input(text_answer).strip()
             new_game_active = Validators.validate_input_answer(new_human_answer, language)
             return new_game_active
 
@@ -79,6 +83,7 @@ class Validators:
                 According to that variable user receives instructions on desired language
         :return: bool that indicates game mode chosen by user
         """
+        text_mode = return_text(language, 'Your choice: ', 'Вашият избор: ')
         if human_answer.lower() == 'w':
             w_mode = True
             return w_mode
@@ -87,7 +92,7 @@ class Validators:
             return w_mode
         else:
             Output.text_choose_valid_mode(language)
-            new_human_answer = input().strip()
+            new_human_answer = input(text_mode).strip()
             new_w_mode = Validators.validate_input_answer(new_human_answer, language)
             return new_w_mode
 
@@ -101,10 +106,11 @@ class Validators:
         :param sum_dice: number of dice on the table
         :return: list of valid bet in format [count of dice] [face of die]
         """
+        text_bet = return_text(language, 'Your bet: ', 'Вашият залог: ')
         valid_human_bet = False
         new_human_bet = []
         while not valid_human_bet:
-            new_human_bet = input().strip() \
+            new_human_bet = input(text_bet).strip() \
                 .split(' ')
             valid_human_bet = Validators.valid_bet(new_human_bet, old_bet, sum_dice)
             if not valid_human_bet:
@@ -155,6 +161,6 @@ class Validators:
             return False
         else:
             Output.text_valid_language()
-            new_human_answer = input().strip()
+            new_human_answer = input("Your choice/Твоят избор: ").strip()
             language = Validators.validate_language(new_human_answer)
             return language
