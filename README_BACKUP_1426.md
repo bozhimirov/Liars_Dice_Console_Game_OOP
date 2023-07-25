@@ -126,5 +126,8 @@ Here is placed a function that calculates probability of win based on previous o
 #### **main.py**
 Here is the main file of the game.
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 4dea1f1d2e79aaac64d12c4959690b3523c85ed9
 

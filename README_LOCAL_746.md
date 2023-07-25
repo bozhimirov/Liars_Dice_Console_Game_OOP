@@ -127,4 +127,3 @@ Here is placed a function that calculates probability of win based on previous o
 Here is the main file of the game.
 
 
-
