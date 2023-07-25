@@ -140,7 +140,7 @@ class Validators:
             else:
                 if (sum_of_dice >= int(current_bet[0]) > int(previous_bet[0]) and (
                         int(previous_bet[1]) == int(current_bet[1]))) \
-                        or ((1 <= int(previous_bet[0]) <= sum_of_dice) and int(current_bet[1]) > int(previous_bet[1])):
+                        or ((1 <= int(current_bet[0]) <= sum_of_dice) and int(current_bet[1]) > int(previous_bet[1])):
                     if int(current_bet[1]) > 6:
                         return False
                     return True
