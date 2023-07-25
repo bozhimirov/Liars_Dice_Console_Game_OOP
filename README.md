@@ -77,6 +77,7 @@ In player_helpers.py are positioned some functions that help to manage players. 
  - actions if player is bot
 
 #### **utils**
+
 ### **betting_helpers.py**
 In betting_helpers.py are positioned some functions that help for managing betting proccess. A list of all functions:
 
@@ -103,11 +104,6 @@ In this file there is a list with 10 predefined names of opponents
 Here is positioned Output class with methods that prints text on the console. 
 
 
-### **test.py**
-This file have to collect tests but it is empty, because of my most dedicated testers - Simeon and Deyan, that help me test the game manually
-
-
-
 ### **validators.py**
 In this file there is a class Validators with the needed validations as methods. A list with all methods:
 
@@ -119,6 +115,11 @@ In this file there is a class Validators with the needed validations as methods.
 - validate bet
 - validate language
 
+### **tests**
+This folder contains test files.
+
+### **test_validate_bet.py**
+Here are tests for validator of bets. Here are covered most of the cases.
 
 #### **probability_calculation.py**
 Here is placed a function that calculates probability of win based on previous opponent's actions and using binomial distribution

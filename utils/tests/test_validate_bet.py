@@ -5,8 +5,6 @@ from utils.validators import Validators
 
 class InputTest(unittest.TestCase):
     def setUp(self):
-        self.bots_names = ['Bumblebee', 'R2-D2']
-        self.english_language = True
         self.previous_bet = [3, 4]
         self.sum_dice = 12
 
